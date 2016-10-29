@@ -161,22 +161,36 @@ request.get(api + "/gateway", function(err,res,body) {
 							var backgroundImgNum = Math.floor(Math.random() * parsed.data.length);
 							
 							request(parsed.data[backgroundImgNum].link + "", {encoding: null}, function(err,res,body) {
-								sendImage(body, parsed.data[backgroundImgNum].type.split("/")[1], message.channel_id);
+								var img = gm(body);
+								var width = 0;
+								var height = 0;
+								img.size(function(err, value){
+									width = value.width;
+									height = value.height;
+									
+									var textImage = gm(1000,1000, "#000000");
+									
+									textImage.transparent("#000000")
+										.fontSize(height/8)
+										.font("Impact")
+										.fill("#ffffff")
+										.stroke("#000000")
+										.strokeWidth(2)
+										.drawText(0,0, message.content.toUpperCase(),"Center")
+										.trim()
+										.resize(width, null, ">")
+										.write("./temp.png", function(err) {
+											img.composite("./temp.png")
+												.gravity("South")
+												.geometry("+0+" + height/8);
+												
+											img.toBuffer("PNG", function(er, buffer) {
+												sendImage(buffer, "png", message.channel_id);
+											});
+										});
+								})
 							});
 						});
-						
-						/*var base = gm(256, 256, "#ff00ab").stroke("#003d66", 8)
-										.fill("#b3e6ff")
-										.drawRectangle(68,100, 188,232, 16,16)
-										.fill("#996633")
-										.stroke("none")
-										.drawRectangle(80,80, 176,100, 8,8)
-										.fill("#ffcc00")
-										.drawRectangle(84,210, 132,226, 4,4)
-										.drawRectangle(84,192, 132,208, 4,4)
-										.drawRectangle(84,174, 132,190, 4,4)
-										.drawRectangle(84,156, 132,172, 4,4)
-										.drawRectangle(84,138, 132,154, 4,4);*/
 					}
 				}
 			}
