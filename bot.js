@@ -146,8 +146,11 @@ request.get(api + "/gateway", function(err,res,body) {
 			{
 				//if(channels[message.channel_id] == true)
 				{
-					if(message.content.includes("meme"))
+					if(message.content.startsWith(prefix + "meme"))
 					{
+						var args = message.content.replace(prefix + "meme ", "");
+						sendMessage("<@" + message.author.id + "> generating a meme for you of *" + args + "*", message.channel_id);
+						
 						var options = {
 							url: "https://api.imgur.com/3/memegen/defaults",
 							headers: {
@@ -176,7 +179,7 @@ request.get(api + "/gateway", function(err,res,body) {
 										.fill("#ffffff")
 										.stroke("#000000")
 										.strokeWidth(2)
-										.drawText(0,0, message.content.toUpperCase(),"Center")
+										.drawText(0,0, args.toUpperCase(),"Center")
 										.trim()
 										.resize(width, null, ">")
 										.write("./temp.png", function(err) {
