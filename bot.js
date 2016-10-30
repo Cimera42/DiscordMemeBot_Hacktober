@@ -4,8 +4,10 @@ var api = "https://discordapp.com/api";
 
 var fs = require("fs");
 
-var bot_token = fs.readFileSync("./bot_token.key").toString();
-var imgur_token = fs.readFileSync("./imgur_token.key").toString();
+var bot_token = process.env.BOT;//fs.readFileSync("./bot_token.key").toString();
+var imgur_token = process.env.IMGUR;//fs.readFileSync("./imgur_token.key").toString();
+console.log(bot_token, imgur_token);
+
 
 function sendMessage(messageContent, channel)
 {
@@ -115,7 +117,7 @@ request.get(api + "/gateway", function(err,res,body) {
 				"d": {
 					"idle_since": null,
 					"game": {
-						"name": "No game",
+						"name": "Meme generation",
 					}
 				}
 			});
@@ -205,7 +207,7 @@ request.get(api + "/gateway", function(err,res,body) {
 	});
 });
 
-var http = require('http');
+/*var http = require('http');
 var server = http.createServer(function(req, res) {
 	res.write("Running Discord Bot");
 	res.end();
@@ -213,4 +215,4 @@ var server = http.createServer(function(req, res) {
 
 server.listen(process.env.PORT, function(){
     console.log("Server started on ", process.env.PORT);
-});
+});*/
