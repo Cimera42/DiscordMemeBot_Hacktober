@@ -164,9 +164,11 @@ request.get(api + "/gateway", function(err,res,body) {
 							var parsed = JSON.parse(body);
 							
 							var backgroundImgNum = Math.floor(Math.random() * parsed.data.length);
+							console.log(backgroundImgNum);
 							
 							request(parsed.data[backgroundImgNum].link + "", {encoding: null}, function(err,res,body) {
 								var img = gm(body);
+								console.log(body);
 								var width = 0;
 								var height = 0;
 								img.size(function(err, value){
