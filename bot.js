@@ -66,6 +66,7 @@ function sendImage(imageData, type, channel_id)
 
 var WebSocket = require("ws");
 var gm = require('gm');
+var size = require('request-image-size');
 
 request.get(api + "/gateway", function(err,res,body) {
 	
@@ -166,15 +167,14 @@ request.get(api + "/gateway", function(err,res,body) {
 							var backgroundImgNum = Math.floor(Math.random() * parsed.data.length);
 							console.log(backgroundImgNum);
 							
-							request(parsed.data[backgroundImgNum].link + "", {encoding: null}, function(err,res,body) {
-								var img = gm(body);
-								console.log(body);
-								var width = 0;
-								var height = 0;
-								img.size(function(err, value){
-									width = value.width;
-									height = value.height;
-									
+							size(parsed.data[backgroundImgNum].link + "", function(err, dimensions, length) {
+							
+								request(parsed.data[backgroundImgNum].link + "", {encoding: null}, function(err,res,body) {									
+									var img = gm(body);
+									var width = dimensions.width;
+									var height = dimensions.height;
+									console.log(width, height);
+										
 									var textImage = gm(1000,1000, "#000000");
 									
 									textImage.transparent("#000000")
@@ -195,7 +195,7 @@ request.get(api + "/gateway", function(err,res,body) {
 												sendImage(buffer, "png", message.channel_id);
 											});
 										});
-								})
+								});
 							});
 						});
 					}
